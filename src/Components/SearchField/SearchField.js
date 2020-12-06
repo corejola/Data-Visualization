@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import './SearchField.css';
-// import axios from 'axios';
+import axios from 'axios';
 import Loader from '../gif/loader.gif';
+import stateAbbreviation from '../Utils/stateAbbreviation'
 import { TextField, Button, FormControl } from '@material-ui/core';
 
 class SearchField extends Component {
@@ -9,10 +10,11 @@ class SearchField extends Component {
         super(props)
         this.state = {
             query: "",
-            results: [],
+            // results: [],
             loading: false,
             mesage: '',
-            state: ''
+            state: '',
+            positive: ''
         }
         this.cancel = ''
 
@@ -20,67 +22,61 @@ class SearchField extends Component {
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
     }
 
-    // populate page with all data rows...
-    // componentDidMount() {
-    // const url = '/findAll'
-    // axios.get(url).then(res => {
-    //     this.setState({
-    //         results: res.data
-    //     })
-    // }).catch(err => {
-    //     console.log(err)
-    // })
-    // }
-
     handleInputChange = event => {
         event.preventDefault();
         const query = event.target.value
+
         this.setState({
             query
         })
     }
 
     handleSubmitForm = (event) => {
+        const query = this.state
         event.preventDefault();
-        console.log(this.state.query)
+        let abbrev = stateAbbreviation(query)
+        console.log(`Abrrev: ${abbrev}`)
+        this.queryApi(abbrev)
     }
 
-    // get search results
-    // getSearchResults = (query) => {
 
-    //     const searchUrl = `https://api.covidtracking.com/v1/states/${query}/current.json`;
+    queryApi = (query) => {
 
-    //     if (this.cancel) {
-    //         this.cancel.cancel()
-    //     }
-    //     this.cancel = axios.CancelToken.source()
+        const searchUrl = `https://api.covidtracking.com/v1/states/${query}/current.json`;
 
-    //     axios.get(searchUrl, {
-    //         cancelToken: this.cancel.token
-    //     })
-    //         .then(res => {
-    //             console.log(res.data)
-    //             const resultNotFoundMsg = !res.data.length
-    //                 ? "There are no more search results" : "";
-    //             this.setState({
-    //                 results: res.data,
-    //                 message: resultNotFoundMsg,
-    //                 loading: false
-    //             })
-    //         })
-    //         .catch(err => {
-    //             if (axios.isCancel(err) || err) {
-    //                 this.setState({
-    //                     loading: false,
-    //                     message: "Failed to Get Data"
-    //                 })
-    //             }
-    //         })
-    // }
+        if (this.cancel) {
+            this.cancel.cancel()
+        }
+        this.cancel = axios.CancelToken.source()
+
+        axios.get(searchUrl, {
+            cancelToken: this.cancel.token
+        })
+            .then(res => {
+                console.log(res.data)
+                const resultNotFoundMsg = !res.data
+                    ? "There are no more search results" : "";
+
+                this.setState({
+                    state: res.data.state,
+                    positive: res.data.positive,
+                    message: resultNotFoundMsg,
+                    loading: false
+                })
+            })
+            .catch(err => {
+                if (axios.isCancel(err) || err) {
+                    this.setState({
+                        loading: false,
+                        message: "Failed to Get Data, Please enter a valid US State"
+                    })
+                }
+            })
+    }
 
 
     render() {
-        const { query, loading, message } = this.state
+        const { query, loading, message, state, positive } = this.state
 
         return (
             <div>
@@ -111,7 +107,8 @@ class SearchField extends Component {
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
                 {/* Results Component will take in props from the form */}
-
+                { state && <p>State: {state}</p>}
+                { positive && <p>Positive Covid Cases: {positive}</p>}
             </div>
         )
     }
