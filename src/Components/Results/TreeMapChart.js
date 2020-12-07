@@ -3,7 +3,6 @@ import './treeMapChart.css'
 import Chart from 'react-apexcharts';
 import { Card, CardContent, Typography, Box } from '@material-ui/core';
 import moment from 'moment'
-import stateAbbreviation from '../Utils/stateAbbreviation'
 
 export default class TreeMapChart extends Component {
     constructor(props) {
@@ -62,7 +61,7 @@ export default class TreeMapChart extends Component {
                             <Box textAlign="center">{this.props.state} COVID-19 Hospitalization Data</Box>
                         </Typography>
                         <Typography color="textSecondary">
-                            Last modified {moment(this.props.date).format("dddd, MMMM DD, yyyy")}
+                            Data Last Modified {moment(this.props.date).format("dddd, MMMM DD, yyyy")}
                         </Typography>
                         <Chart
                             options={this.state.options}

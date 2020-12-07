@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactApexChart from 'react-apexcharts';
+import { Card, CardContent, Typography, Box } from '@material-ui/core';
 
 export default class BarChart extends Component {
     constructor(props) {
@@ -7,9 +8,7 @@ export default class BarChart extends Component {
 
         this.state = {
 
-            series: [{
-                data: [21, 22, 10, 28, 16, 21, 13, 30]
-            }],
+            series: this.props.data,
             options: {
                 chart: {
                     height: 350,
@@ -48,14 +47,18 @@ export default class BarChart extends Component {
                 },
                 xaxis: {
                     categories: [
-                        ['John', 'Doe'],
-                        ['Joe', 'Smith'],
-                        ['Jake', 'Williams'],
-                        'Amber',
-                        ['Peter', 'Brown'],
-                        ['Mary', 'Evans'],
-                        ['David', 'Wilson'],
-                        ['Lily', 'Roberts'],
+                        'Positive Cases',
+                        'Positive Case Increase',
+                        'Death',
+                        'Death Confirmed',
+                        'Death Increase',
+                        'Death Probable',
+                        'Hospitalized',
+                        'Cumulative Hospitalized',
+                        'Currently Hospitalized',
+                        'Hospitalized Increase',
+                        'Currently on Ventilator',
+                        'Recovered'
                     ],
                     labels: {
                         style: {
@@ -85,9 +88,13 @@ export default class BarChart extends Component {
 
     render() {
         return (
-            <div id="chart">
-                <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
-            </div>
+            <Card>
+                <CardContent>
+                    <div id="chart">
+                        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+                    </div>
+                </CardContent>
+            </Card>
         )
     }
 }

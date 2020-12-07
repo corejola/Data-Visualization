@@ -5,6 +5,9 @@ import Loader from '../gif/loader.gif';
 import stateAbbreviation from '../Utils/stateAbbreviation'
 import { TextField, Button, FormControl, Box, Card } from '@material-ui/core';
 import TreeMapChart from '../Results/TreeMapChart'
+import TableData from '../Results/TableData'
+import BarChart from '../Results/BarChart'
+
 
 class SearchField extends Component {
     constructor(props) {
@@ -17,7 +20,8 @@ class SearchField extends Component {
             stateSelected: false,
             date: '',
             series: [],
-            tableData: {}
+            tableData: {},
+            chartData: []
         }
         this.cancel = ''
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -37,6 +41,7 @@ class SearchField extends Component {
             query: '',
             date: '',
             series: [],
+            tableData: {},
             stateSelected: false,
             loading: true
         })
@@ -99,12 +104,16 @@ class SearchField extends Component {
                         ]
                     }
                 ]
+                let barChartData = [{
+                    data: [res.data.positiveCasesViral, res.data.positiveIncrease, res.data.death, res.data.deathConfirmed, res.data.deathIncrease, res.data.deathProbable, res.data.hospitalized, res.data.hospitalizedCumulative, res.data.hospitalizedCurrently, res.data.hospitalizedIncrease, res.data.onVentilatorCurrently, res.data.recovered]
+                }]
 
                 this.setState({
                     stateSelected: true,
                     usState: res.data.state,
                     date: res.data.dateModified,
                     series: newSeries,
+                    chartData: barChartData,
                     tableData: res.data,
                     message: resultNotFoundMsg,
                     loading: false
@@ -121,7 +130,7 @@ class SearchField extends Component {
     }
 
     render() {
-        const { query, loading, message, date, usState, series, stateSelected, tableData } = this.state
+        const { query, loading, message, date, usState, series, stateSelected, tableData, chartData } = this.state
 
         return (
             <div>
@@ -144,7 +153,7 @@ class SearchField extends Component {
                     </Box>
                 </Card>
 
-                {message && <p className="message"> {message} </p>}
+                {message && <p className="message" > {message} </p>}
 
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
@@ -156,8 +165,11 @@ class SearchField extends Component {
                     series={series}
                 />}
 
-                {/* Table Data */}
-                {/* {stateSelected && <TreeMapChart tableData={tableData} />} */}
+                <br />
+                {stateSelected && <BarChart data={chartData} />}
+
+                <br />
+                {stateSelected && <TableData tableData={tableData} />}
 
             </div>
         )
