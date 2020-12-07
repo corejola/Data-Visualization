@@ -58,7 +58,7 @@ export default class TreeMapChart extends Component {
                 <CardContent>
                     <div id="chart">
                         <Typography variant="h5" component="h2" >
-                            <Box textAlign="center">{this.props.state} COVID-19 Hospitalization Data</Box>
+                            <Box textAlign="center">{this.props.state} COVID-19 Data</Box>
                         </Typography>
                         <Typography color="textSecondary">
                             Data Last Modified {moment(this.props.date).format("dddd, MMMM DD, yyyy")}
