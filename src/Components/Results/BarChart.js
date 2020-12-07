@@ -5,9 +5,7 @@ import { Card, CardContent } from '@material-ui/core';
 export default class BarChart extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-
             series: this.props.data,
             options: {
                 chart: {
@@ -82,8 +80,6 @@ export default class BarChart extends Component {
             },
         };
     }
-
-
 
     render() {
         return (

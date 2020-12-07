@@ -3,7 +3,7 @@ import './SearchField.css';
 import axios from 'axios';
 import Loader from '../gif/loader.gif';
 import stateAbbreviation from '../Utils/stateAbbreviation'
-import { TextField, Button, FormControl, Box, Card } from '@material-ui/core';
+import { TextField, Button, FormControl, Box, Card, Typography } from '@material-ui/core';
 import TreeMapChart from '../Results/TreeMapChart'
 import TableData from '../Results/TableData'
 import BarChart from '../Results/BarChart'
@@ -158,7 +158,11 @@ class SearchField extends Component {
                     </Box>
                 </Card>
 
-                {message && <p className="message" > {message} </p>}
+                <br />
+                {message && <Card>
+                    <Box className="message" textAlign="center">
+                        {message}
+                    </Box> </Card>}
 
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 

@@ -21,7 +21,6 @@ app.use(function (req, res, next) {
 
 app.use(express.static(path.join(__dirname, "public")))
 
-// simple server
 const PORT = process.env.PORT || 3001;
 
 app.get('/search=:query', async (req, res) => {
