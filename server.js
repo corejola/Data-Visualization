@@ -36,7 +36,8 @@ app.get('/search=:query', async (req, res) => {
             res.json(results.data)
         }
         catch (err) {
-            console.log(err)
+
+            res.send(err.response.data)
         }
     }
 })

@@ -70,60 +70,65 @@ class SearchField extends Component {
             cancelToken: this.cancel.token
         })
             .then(res => {
-                console.log(res.data)
-                const resultNotFoundMsg = !res.data
-                    ? "There are no more search results" : "";
+                if (res.data.error) {
+                    this.setState({
+                        loading: false,
+                        message: "Data not found, Please enter a valid US State."
+                    })
+                }
+                else {
+                    let newSeries = [
+                        {
+                            data: [
+                                {
+                                    x: 'Currently Hospitalized ',
+                                    y: res.data.hospitalizedCurrently
+                                },
+                                {
+                                    x: 'Currently in ICU',
+                                    y: res.data.inIcuCurrently
+                                },
+                                {
+                                    x: 'Deaths',
+                                    y: res.data.death
+                                },
+                                {
+                                    x: 'Hospitalized Increase',
+                                    y: res.data.hospitalizedIncrease
+                                },
+                                {
+                                    x: 'Total Hospitalized',
+                                    y: res.data.hospitalized
+                                },
+                                {
+                                    x: 'Postive Increase',
+                                    y: res.data.positiveIncrease
+                                }
+                            ]
+                        }
+                    ]
+                    let barChartData = [{
+                        data: [res.data.positiveCasesViral, res.data.positiveIncrease, res.data.death, res.data.deathConfirmed, res.data.deathIncrease, res.data.deathProbable, res.data.hospitalized, res.data.hospitalizedCumulative, res.data.hospitalizedCurrently, res.data.hospitalizedIncrease, res.data.onVentilatorCurrently, res.data.recovered]
+                    }]
 
-                let newSeries = [
-                    {
-                        data: [
-                            {
-                                x: 'Currently Hospitalized ',
-                                y: res.data.hospitalizedCurrently
-                            },
-                            {
-                                x: 'Currently in ICU',
-                                y: res.data.inIcuCurrently
-                            },
-                            {
-                                x: 'Deaths',
-                                y: res.data.death
-                            },
-                            {
-                                x: 'Hospitalized Increase',
-                                y: res.data.hospitalizedIncrease
-                            },
-                            {
-                                x: 'Total Hospitalized',
-                                y: res.data.hospitalized
-                            },
-                            {
-                                x: 'Postive Increase',
-                                y: res.data.positiveIncrease
-                            }
-                        ]
-                    }
-                ]
-                let barChartData = [{
-                    data: [res.data.positiveCasesViral, res.data.positiveIncrease, res.data.death, res.data.deathConfirmed, res.data.deathIncrease, res.data.deathProbable, res.data.hospitalized, res.data.hospitalizedCumulative, res.data.hospitalizedCurrently, res.data.hospitalizedIncrease, res.data.onVentilatorCurrently, res.data.recovered]
-                }]
-
-                this.setState({
-                    stateSelected: true,
-                    usState: res.data.state,
-                    date: res.data.dateModified,
-                    series: newSeries,
-                    chartData: barChartData,
-                    tableData: res.data,
-                    message: resultNotFoundMsg,
-                    loading: false
-                })
+                    this.setState({
+                        stateSelected: true,
+                        usState: res.data.state,
+                        date: res.data.dateModified,
+                        series: newSeries,
+                        chartData: barChartData,
+                        tableData: res.data,
+                        loading: false,
+                        message: ''
+                    })
+                }
             })
             .catch(err => {
+                console.log(err)
                 if (axios.isCancel(err) || err) {
                     this.setState({
                         loading: false,
-                        message: "Failed to Get Data, Please enter a valid US State"
+                        message: "Data not found, Please enter a valid US State."
                     })
                 }
             })

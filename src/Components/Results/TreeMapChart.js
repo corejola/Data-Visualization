@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './treeMapChart.css'
+import './style.css'
 import Chart from 'react-apexcharts';
 import { Card, CardContent, Typography, Box } from '@material-ui/core';
 import moment from 'moment'
