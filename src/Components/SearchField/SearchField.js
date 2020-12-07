@@ -4,17 +4,20 @@ import axios from 'axios';
 import Loader from '../gif/loader.gif';
 import stateAbbreviation from '../Utils/stateAbbreviation'
 import { TextField, Button, FormControl } from '@material-ui/core';
+import TreeMapChart from '../Results/TreeMapChart'
+import BarChart from '../Results/BarChart';
 
 class SearchField extends Component {
     constructor(props) {
         super(props)
         this.state = {
             query: "",
-            // results: [],
             loading: false,
             mesage: '',
             state: '',
-            positive: ''
+            date: '',
+            series: []
+
         }
         this.cancel = ''
 
@@ -25,18 +28,26 @@ class SearchField extends Component {
     handleInputChange = event => {
         event.preventDefault();
         const query = event.target.value
-
         this.setState({
             query
         })
     }
 
     handleSubmitForm = (event) => {
-        const query = this.state
         event.preventDefault();
-        let abbrev = stateAbbreviation(query)
-        console.log(`Abrrev: ${abbrev}`)
-        this.queryApi(abbrev)
+        const query = this.state
+        if (query.length < 1) {
+            console.log("Missing Value")
+        }
+        else {
+            let abbrev = stateAbbreviation(query)
+            this.setState({
+                query: '',
+                date: ''
+            })
+
+            this.queryApi(abbrev)
+        }
     }
 
 
@@ -53,16 +64,37 @@ class SearchField extends Component {
             cancelToken: this.cancel.token
         })
             .then(res => {
-                console.log(res.data)
+
                 const resultNotFoundMsg = !res.data
                     ? "There are no more search results" : "";
 
+                let newSeries = [
+                    {
+                        data: [
+                            {
+                                x: 'Total Tests',
+                                y: res.data.totalTestsViral
+                            },
+                            {
+                                x: 'Total Negative Cases',
+                                y: res.data.negative
+                            },
+                            {
+                                x: 'Total Positive Cases',
+                                y: res.data.positive
+                            }
+                        ]
+                    }
+                ]
+
                 this.setState({
                     state: res.data.state,
-                    positive: res.data.positive,
+                    date: res.data.date,
+                    series: newSeries,
                     message: resultNotFoundMsg,
-                    loading: false
+                    loading: false,
                 })
+
             })
             .catch(err => {
                 if (axios.isCancel(err) || err) {
@@ -74,14 +106,13 @@ class SearchField extends Component {
             })
     }
 
-
     render() {
-        const { query, loading, message, state, positive } = this.state
+        const { query, loading, message, date, state, series } = this.state
 
         return (
             <div>
                 <h2 className="heading ">Tracking COVID-19 Data by US States</h2>
-
+                {/* Today's Date */}
                 <div className="d-flex flex-row">
                     <form onSubmit={this.handleSubmitForm}>
                         <FormControl>
@@ -91,6 +122,7 @@ class SearchField extends Component {
                                 label="Search COVID-19 Cases by US State..."
                                 className=""
                                 value={query}
+                                fullWidth
                                 onChange={this.handleInputChange}
                             />
 
@@ -100,15 +132,23 @@ class SearchField extends Component {
                     </form>
                 </div>
 
-                {/* Error Message */}
                 {message && <p className="message"> {message} </p>}
 
-                {/* loading... */}
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
                 {/* Results Component will take in props from the form */}
-                { state && <p>State: {state}</p>}
-                { positive && <p>Positive Covid Cases: {positive}</p>}
+
+
+                {state &&
+                    <TreeMapChart
+                        date={date}
+                        state={state}
+                        series={series}
+                    />
+                }
+
+                {date && <BarChart />}
+
             </div>
         )
     }

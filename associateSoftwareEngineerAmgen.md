@@ -18,7 +18,7 @@
 Application runs in development mode on [http://localhost:3000](http://localhost:3000).
 
 ### Data Source
-* 
+* `https://covidtracking.com/data/api`
 ### Technology
 * React.js
 * Apex Charts

@@ -74,7 +74,6 @@ export default function stateAbbreviations(input) {
     }
     else {
         formatState = state[0].charAt(0).toUpperCase() + state[0].slice(1)
-        console.log(`Else: ${formatState}`)
         return states[formatState]
     }
 
