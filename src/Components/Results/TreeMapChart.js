@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
+import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import moment from 'moment'
 
 export default class TreeMapChart extends Component {
     constructor(props) {
@@ -13,10 +15,6 @@ export default class TreeMapChart extends Component {
                 chart: {
                     height: 350,
                     type: 'treemap'
-                },
-                title: {
-                    text: `Tracking Covid Data: ${this.props.state}`,
-                    align: 'center'
                 },
                 colors: [
                     '#3B93A5',
@@ -43,27 +41,29 @@ export default class TreeMapChart extends Component {
         };
     }
 
-
-
-    componentDidMount() {
-
-    }
-
     componentWillUnmount() {
         this.setState({ series: [] })
     }
 
     render() {
         return (
-
-            <div id="chart">
-                <Chart
-                    options={this.state.options}
-                    series={this.state.series}
-                    type="treemap"
-                    height={400} />
-            </div>
-
+            <Card>
+                <CardContent>
+                    <div id="chart">
+                        <Typography variant="h5" component="h2" >
+                            <Box textAlign="center">{this.props.state} COVID-19 Data</Box>
+                        </Typography>
+                        <Typography color="textSecondary">
+                            Last modified {moment(this.props.date).format("dddd, MMMM DD, yyyy")}
+                        </Typography>
+                        <Chart
+                            options={this.state.options}
+                            series={this.state.series}
+                            type="treemap"
+                            height={400} />
+                    </div>
+                </CardContent>
+            </Card >
         )
     }
 }

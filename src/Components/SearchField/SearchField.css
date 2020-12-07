@@ -28,27 +28,17 @@
 
 .submit-button{
     position: absolute;
-    top: 0px;
+    bottom: 35px;
     font-size: 24px;
-    left: 10px;
+    left: 325px;
     letter-spacing: 4px;
+    width: 150px;
 }
 
-.results-container {
+/* .results-container {
     display: flex;
     flex-flow: wrap;
-}
-
-.result-item {
-    position: relative;
-    padding: 16px;
-    border:1px solid #898989;
-    margin: 16px;
-    text-align: center;
-    min-width:200px;
-    width:100%;
-    box-shadow: 2px 2px 2px #898989
-}
+} */
 
 .search-loading {
     position: absolute;

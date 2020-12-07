@@ -8,56 +8,76 @@ export default class BarChart extends Component {
         this.state = {
 
             series: [{
-                name: 'Net Profit',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-            }, {
-                name: 'Revenue',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-            }, {
-                name: 'Free Cash Flow',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+                data: [21, 22, 10, 28, 16, 21, 13, 30]
             }],
             options: {
                 chart: {
+                    height: 350,
                     type: 'bar',
-                    height: 350
+                    events: {
+                        click: function (chart, w, e) {
+
+                        }
+                    }
                 },
+                colors: [
+                    '#3B93A5',
+                    '#F7B844',
+                    '#ADD8C7',
+                    '#EC3C65',
+                    '#CDD7B6',
+                    '#C1F666',
+                    '#D43F97',
+                    '#1E5D8C',
+                    '#421243',
+                    '#7F94B0',
+                    '#EF6537',
+                    '#C0ADDB'
+                ],
                 plotOptions: {
                     bar: {
-                        horizontal: false,
-                        columnWidth: '55%',
-                        endingShape: 'rounded'
-                    },
+                        columnWidth: '45%',
+                        distributed: true
+                    }
                 },
                 dataLabels: {
                     enabled: false
                 },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ['transparent']
+                legend: {
+                    show: false
                 },
                 xaxis: {
-                    categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                },
-                yaxis: {
-                    title: {
-                        text: '$ (thousands)'
-                    }
-                },
-                fill: {
-                    opacity: 1
-                },
-                tooltip: {
-                    y: {
-                        formatter: function (val) {
-                            return "$ " + val + " thousands"
+                    categories: [
+                        ['John', 'Doe'],
+                        ['Joe', 'Smith'],
+                        ['Jake', 'Williams'],
+                        'Amber',
+                        ['Peter', 'Brown'],
+                        ['Mary', 'Evans'],
+                        ['David', 'Wilson'],
+                        ['Lily', 'Roberts'],
+                    ],
+                    labels: {
+                        style: {
+                            colors: [
+                                '#3B93A5',
+                                '#F7B844',
+                                '#ADD8C7',
+                                '#EC3C65',
+                                '#CDD7B6',
+                                '#C1F666',
+                                '#D43F97',
+                                '#1E5D8C',
+                                '#421243',
+                                '#7F94B0',
+                                '#EF6537',
+                                '#C0ADDB'
+                            ],
+                            fontSize: '12px'
                         }
                     }
                 }
             },
-
-
         };
     }
 

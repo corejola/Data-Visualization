@@ -3,7 +3,7 @@ import './SearchField.css';
 import axios from 'axios';
 import Loader from '../gif/loader.gif';
 import stateAbbreviation from '../Utils/stateAbbreviation'
-import { TextField, Button, FormControl } from '@material-ui/core';
+import { TextField, Button, FormControl, Box } from '@material-ui/core';
 import TreeMapChart from '../Results/TreeMapChart'
 import BarChart from '../Results/BarChart';
 
@@ -20,7 +20,6 @@ class SearchField extends Component {
 
         }
         this.cancel = ''
-
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
     }
@@ -45,7 +44,6 @@ class SearchField extends Component {
                 query: '',
                 date: ''
             })
-
             this.queryApi(abbrev)
         }
     }
@@ -71,17 +69,34 @@ class SearchField extends Component {
                 let newSeries = [
                     {
                         data: [
+
                             {
-                                x: 'Total Tests',
-                                y: res.data.totalTestsViral
+                                x: 'Currently Hospitalized ',
+                                y: res.data.hospitalizedCurrently
                             },
                             {
-                                x: 'Total Negative Cases',
-                                y: res.data.negative
+                                x: 'Currently in ICU',
+                                y: res.data.inIcuCurrently
                             },
                             {
-                                x: 'Total Positive Cases',
-                                y: res.data.positive
+                                x: 'Death Increase',
+                                y: res.data.deathIncrease
+                            },
+                            {
+                                x: 'Deaths',
+                                y: res.data.death
+                            },
+                            {
+                                x: 'Hospitalized Increase',
+                                y: res.data.hospitalizedIncrease
+                            },
+                            {
+                                x: 'Total Hospitalized',
+                                y: res.data.hospitalized
+                            },
+                            {
+                                x: 'Postive Increase',
+                                y: res.data.positiveIncrease
                             }
                         ]
                     }
@@ -89,12 +104,11 @@ class SearchField extends Component {
 
                 this.setState({
                     state: res.data.state,
-                    date: res.data.date,
+                    date: res.data.dateModified,
                     series: newSeries,
                     message: resultNotFoundMsg,
                     loading: false,
                 })
-
             })
             .catch(err => {
                 if (axios.isCancel(err) || err) {
@@ -116,18 +130,18 @@ class SearchField extends Component {
                 <div className="d-flex flex-row">
                     <form onSubmit={this.handleSubmitForm}>
                         <FormControl>
+                            <Box textAlign="center">
+                                <TextField type="text"
+                                    id="standard-basic"
+                                    label="Search COVID-19 Cases by US State..."
+                                    className=""
+                                    value={query}
+                                    fullWidth
+                                    onChange={this.handleInputChange}
+                                />
 
-                            <TextField type="text"
-                                id="standard-basic"
-                                label="Search COVID-19 Cases by US State..."
-                                className=""
-                                value={query}
-                                fullWidth
-                                onChange={this.handleInputChange}
-                            />
-
-                            <Button className="submit-button" type="submit">Submit</Button>
-
+                                <Button className="submit-button" type="submit">Submit</Button>
+                            </Box>
                         </FormControl>
                     </form>
                 </div>
@@ -136,18 +150,13 @@ class SearchField extends Component {
 
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
-                {/* Results Component will take in props from the form */}
-
-
+                <br></br>
                 {state &&
                     <TreeMapChart
                         date={date}
                         state={state}
                         series={series}
-                    />
-                }
-
-                {date && <BarChart />}
+                    />}
 
             </div>
         )
