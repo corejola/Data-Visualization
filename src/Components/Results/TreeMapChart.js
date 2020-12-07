@@ -43,9 +43,6 @@ export default class TreeMapChart extends Component {
         };
     }
 
-    componentDidMount() {
-
-    }
     componentWillUnmount() {
         this.setState({
             series: []

@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors')
 const path = require('path');
+const axios = require('axios')
 
 // allow CORS
 app.use(cors())
@@ -23,32 +24,16 @@ app.use(express.static(path.join(__dirname, "public")))
 // simple server
 const PORT = process.env.PORT || 3001;
 
-// Simple Routes
-
-
-// find by parameter/query - dynamic partial search of mongodb collection
 app.get('/search=:query', async (req, res) => {
+
+    let stateQuery = req.params.query.toLowerCase()
+
     if (req.params.query === '') {
-        res.send('please provide valid query')
+        res.send('Please provide valid query')
     } else {
         try {
-            let animalQuery = await Animal_names.aggregate([{
-                $match: {
-                    $or: [{
-                        common_name: {
-                            $regex: req.params.query,
-                            '$options': 'i'
-                        }
-                    }, {
-                        scientific_name: {
-                            $regex: req.params.query,
-                            '$options': 'i'
-                        }
-                    }]
-                }
-            }])
-
-            res.json(animalQuery)
+            let results = await axios.get(`https://api.covidtracking.com/v1/states/${stateQuery}/current.json`)
+            res.json(results.data)
         }
         catch (err) {
             console.log(err)
