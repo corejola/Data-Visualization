@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactApexChart from 'react-apexcharts';
-import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import { Card, CardContent } from '@material-ui/core';
 
 export default class BarChart extends Component {
     constructor(props) {
@@ -15,7 +15,6 @@ export default class BarChart extends Component {
                     type: 'bar',
                     events: {
                         click: function (chart, w, e) {
-
                         }
                     }
                 },

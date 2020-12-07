@@ -59,7 +59,7 @@ class SearchField extends Component {
 
     queryApi = (query) => {
 
-        const searchUrl = `https://api.covidtracking.com/v1/states/${query}/current.json`;
+        const searchUrl = `/search=${query}`;
 
         if (this.cancel) {
             this.cancel.cancel()
@@ -70,7 +70,7 @@ class SearchField extends Component {
             cancelToken: this.cancel.token
         })
             .then(res => {
-
+                console.log(res.data)
                 const resultNotFoundMsg = !res.data
                     ? "There are no more search results" : "";
 
@@ -147,7 +147,7 @@ class SearchField extends Component {
                                     onChange={this.handleInputChange}
                                     className="form-input"
                                     fullWidth />
-                                <Button className="submit-button" type="submit" variant="contained" color="primary" >Submit</Button>
+                                <Button className="submit-button" type="submit" variant="contained" color="primary" >Search</Button>
                             </FormControl>
                         </form>
                     </Box>
@@ -158,12 +158,7 @@ class SearchField extends Component {
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
                 <br />
-
-                {stateSelected && <TreeMapChart
-                    date={date}
-                    state={usState}
-                    series={series}
-                />}
+                {stateSelected && <TreeMapChart date={date} state={usState} series={series} />}
 
                 <br />
                 {stateSelected && <BarChart data={chartData} />}
