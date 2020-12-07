@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import './treeMapChart.css'
 import Chart from 'react-apexcharts';
 import { Card, CardContent, Typography, Box } from '@material-ui/core';
 import moment from 'moment'
+import stateAbbreviation from '../Utils/stateAbbreviation'
 
 export default class TreeMapChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            stateName: '',
             series: this.props.series,
             options: {
                 legend: {
@@ -41,17 +44,22 @@ export default class TreeMapChart extends Component {
         };
     }
 
+    componentDidMount() {
+
+    }
     componentWillUnmount() {
-        this.setState({ series: [] })
+        this.setState({
+            series: []
+        })
     }
 
     render() {
         return (
-            <Card>
+            <Card className="tree-map-card">
                 <CardContent>
                     <div id="chart">
                         <Typography variant="h5" component="h2" >
-                            <Box textAlign="center">{this.props.state} COVID-19 Data</Box>
+                            <Box textAlign="center">{this.props.state} COVID-19 Hospitalization Data</Box>
                         </Typography>
                         <Typography color="textSecondary">
                             Last modified {moment(this.props.date).format("dddd, MMMM DD, yyyy")}

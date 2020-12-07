@@ -3,9 +3,8 @@ import './SearchField.css';
 import axios from 'axios';
 import Loader from '../gif/loader.gif';
 import stateAbbreviation from '../Utils/stateAbbreviation'
-import { TextField, Button, FormControl, Box } from '@material-ui/core';
+import { TextField, Button, FormControl, Box, Card } from '@material-ui/core';
 import TreeMapChart from '../Results/TreeMapChart'
-import BarChart from '../Results/BarChart';
 
 class SearchField extends Component {
     constructor(props) {
@@ -14,10 +13,11 @@ class SearchField extends Component {
             query: "",
             loading: false,
             mesage: '',
-            state: '',
+            usState: '',
+            stateSelected: false,
             date: '',
-            series: []
-
+            series: [],
+            tableData: {}
         }
         this.cancel = ''
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -32,22 +32,25 @@ class SearchField extends Component {
         })
     }
 
+    clearState() {
+        this.setState({
+            query: '',
+            date: '',
+            series: [],
+            stateSelected: false,
+            loading: true
+        })
+    }
     handleSubmitForm = (event) => {
         event.preventDefault();
-        const query = this.state
-        if (query.length < 1) {
-            console.log("Missing Value")
-        }
-        else {
-            let abbrev = stateAbbreviation(query)
-            this.setState({
-                query: '',
-                date: ''
-            })
-            this.queryApi(abbrev)
-        }
-    }
 
+        let query = this.state
+        let abbrev = stateAbbreviation(query)
+
+        this.clearState()
+
+        this.queryApi(abbrev)
+    }
 
     queryApi = (query) => {
 
@@ -69,7 +72,6 @@ class SearchField extends Component {
                 let newSeries = [
                     {
                         data: [
-
                             {
                                 x: 'Currently Hospitalized ',
                                 y: res.data.hospitalizedCurrently
@@ -77,10 +79,6 @@ class SearchField extends Component {
                             {
                                 x: 'Currently in ICU',
                                 y: res.data.inIcuCurrently
-                            },
-                            {
-                                x: 'Death Increase',
-                                y: res.data.deathIncrease
                             },
                             {
                                 x: 'Deaths',
@@ -103,11 +101,13 @@ class SearchField extends Component {
                 ]
 
                 this.setState({
-                    state: res.data.state,
+                    stateSelected: true,
+                    usState: res.data.state,
                     date: res.data.dateModified,
                     series: newSeries,
+                    tableData: res.data,
                     message: resultNotFoundMsg,
-                    loading: false,
+                    loading: false
                 })
             })
             .catch(err => {
@@ -121,42 +121,43 @@ class SearchField extends Component {
     }
 
     render() {
-        const { query, loading, message, date, state, series } = this.state
+        const { query, loading, message, date, usState, series, stateSelected, tableData } = this.state
 
         return (
             <div>
-                <h2 className="heading ">Tracking COVID-19 Data by US States</h2>
-                {/* Today's Date */}
-                <div className="d-flex flex-row">
-                    <form onSubmit={this.handleSubmitForm}>
-                        <FormControl>
-                            <Box textAlign="center">
-                                <TextField type="text"
+                <Card>
+                    <h2 className="heading ">Tracking COVID-19 Data by US States</h2>
+                    <Box textAlign="center" width={600}>
+                        <form onSubmit={this.handleSubmitForm}>
+                            <FormControl >
+                                <TextField
+                                    type="text"
                                     id="standard-basic"
                                     label="Search COVID-19 Cases by US State..."
-                                    className=""
                                     value={query}
-                                    fullWidth
                                     onChange={this.handleInputChange}
-                                />
-
-                                <Button className="submit-button" type="submit">Submit</Button>
-                            </Box>
-                        </FormControl>
-                    </form>
-                </div>
+                                    className="form-input"
+                                    fullWidth />
+                                <Button className="submit-button" type="submit" variant="contained" color="primary" >Submit</Button>
+                            </FormControl>
+                        </form>
+                    </Box>
+                </Card>
 
                 {message && <p className="message"> {message} </p>}
 
                 <img src={Loader} className={`search-loading ${loading ? 'show' : 'hide'}`} alt="loading" />
 
-                <br></br>
-                {state &&
-                    <TreeMapChart
-                        date={date}
-                        state={state}
-                        series={series}
-                    />}
+                <br />
+
+                {stateSelected && <TreeMapChart
+                    date={date}
+                    state={usState}
+                    series={series}
+                />}
+
+                {/* Table Data */}
+                {/* {stateSelected && <TreeMapChart tableData={tableData} />} */}
 
             </div>
         )
